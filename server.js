@@ -11,6 +11,8 @@ var anatomy = db.addCollection('anatomy');
 droses.engine('html', mustache());
 droses.set('view engine', 'html');
 droses.set('views', __dirname + '/templates');
+droses.set('port', (process.env.PORT || 3000));
+
 droses.use(express.static('public'));
 droses.use(bodyParser.json());
 
@@ -78,8 +80,7 @@ droses.get('/:bodyPart', function (req, res) {
 	});
 });
 
-droses.listen(80);
-
+droses.listen(droses.get('port'));
 
 function findByName(name) {
 	return anatomy.find({
