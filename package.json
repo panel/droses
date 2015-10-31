@@ -1,0 +1,28 @@
+{
+  "name": "droses",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/panel/droses.git"
+  },
+  "author": "Paul Nelson",
+  "license": "SEE LICENCE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/panel/droses/issues"
+  },
+  "homepage": "https://github.com/panel/droses#readme",
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "mustache-express": "^1.2.1"
+  },
+  "devDependencies": {
+    "jasmine": "^2.3.2"
+  }
+}

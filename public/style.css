@@ -1,0 +1,42 @@
+body {
+	background: #333;
+}
+.container {
+	width: 100%;
+	text-align: center;
+}
+
+.img-wrapper {
+	width: 300px;
+	margin: 1em auto;
+	position: relative;
+}
+
+.locator {
+	position: absolute;
+	color: white;
+	font-size: 2em;
+	cursor: pointer;
+}
+
+.locator.active {
+	color: #B0230A;
+}
+
+.detail {
+	background: white;
+	color: black;
+	border: 3px solid #B0230A;
+	width: 50%;
+	position: absolute;
+	bottom: 260px;
+	left: -40px;
+}
+
+h2 {
+	margin-top: 0.25em;
+}
+
+img {
+	width: 100%;
+}

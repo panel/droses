@@ -1,0 +1,33 @@
+<html>
+<head>
+	<title>How Is Derrick Rose's</title>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body ng-app="drosesApp">
+	<div class="container" ng-controller="controller">
+		<div class="img-wrapper">
+			<div class="detail" ng-show="active">
+				<span ng-bind="active.name"></span>
+				<h2 ng-bind="active.description"></h2>
+			</div>
+			<img id="the-man" src="/drose.png" />
+			<i class="fa fa-exclamation-triangle locator"
+				ng-repeat="part in bodyParts"
+				ng-style="part"
+				ng-click="click(part)"
+				ng-class="{active: active === part}"></i>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"> </script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"> </script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-route.min.js"> </script>
+	<script>
+		window.dr = {};
+		dr.initial = "{{initial}}";
+	</script>
+	<script src="droses.js"> </script>
+</body>
+</html>
