@@ -1,12 +1,14 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var mustache = require('mustache-express');
-var loki = require('lokijs');
+var Datastore = require('nedb');
 var _ = require('lodash');
 
 var droses = express();
-var db = new loki('db.json');
-var anatomy = db.addCollection('anatomy');
+var db = new Datastore({
+	filename: './db.json',
+	autoload: true
+});
 
 droses.engine('html', mustache());
 droses.set('view engine', 'html');
@@ -17,18 +19,20 @@ droses.use(express.static('public'));
 droses.use(bodyParser.json());
 
 droses.get('/api', function (req, res) {
-	res.status(200).send(anatomy.data);
+	db.find({}, function (err, docs) {
+		res.status(200).send(docs);
+	});
 });
 
 droses.get('/api/:bodyPart', function (req, res) {
-	var info = findByName(req.params.bodyPart);
+	findByName(req.params.bodyPart).exec(function (err, info) {
+		if (_.isEmpty(info)) {
+			res.status(404).send();
+			return;
+		}
 
-	if (_.isEmpty(info)) {
-		res.status(404).send();
-		return;
-	}
-
-	res.send(info[0]);
+		res.send(info[0]);
+	});
 });
 
 droses.post('/api', function (req, res) {
@@ -41,33 +45,34 @@ droses.post('/api', function (req, res) {
 		return;
 	}
 
-	var existing = findByName(name);
+	findByName(name).exec(function (err, existing) {
+		if (!_.isEmpty(existing)) {
+			res.status(409);
+			res.send({
+				error: "Details for " + req.body.name + " already exist"
+			});
 
-	if (!_.isEmpty(existing)) {
-		res.status(409);
-		res.send({
-			error: "Details for " + req.body.name + " already exist"
-		});
+			return;
+		}
 
-		return;
-	}
-
-	anatomy.insert(req.body);
-	db.save();
-	res.status(201).send();
+		db.insert(req.body);
+		res.status(201).send();
+	});
 });
 
 droses.put('/api/:bodyPart', function (req, res) {
-	var existing = findByName(req.params.bodyPart);
+	findByName(req.params.bodyPart).exec(function (err, existing) {
+		if (_.isEmpty(existing)) {
+			res.status(404).send();
+		}
 
-	if (_.isEmpty(existing)) {
-		res.status(404).send();
-	}
+		var updated = _.assign(existing[0], req.body);
+		db.update({
+			name: updated.name
+		}, updated);
 
-	var updated = _.assign(existing[0], req.body);
-	anatomy.update(updated);
-	db.save();
-	res.status(201).send();
+		res.status(201).send();
+	});
 });
 
 droses.get('/', function (req, res) {
@@ -83,7 +88,7 @@ droses.get('/:bodyPart', function (req, res) {
 droses.listen(droses.get('port'));
 
 function findByName(name) {
-	return anatomy.find({
+	return db.find({
 		"name": name
 	});
 }
